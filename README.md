@@ -6,49 +6,70 @@ The project demonstrates how to build an intelligent question-answering (QA) bot
 
 ---
 
-## Features  
+## Features
 
-- **Document Loading:** Automatically read content from PDF files.  
-- **Text Splitting:** Divide large documents into manageable chunks for better processing.  
-- **Embeddings:** Convert text into vector representations for semantic similarity searches.  
-- **Vector Databases:** Store and retrieve vectorized text efficiently.  
-- **Question Answering:** Leverage LLMs to provide accurate answers based on document content.  
-- **Interactive UI:** Seamlessly interact with the bot using a Gradio-based interface.  
+- **PDF Document Processing**: Automatically reads and processes PDF files using PyPDFLoader
+- **Intelligent Text Splitting**: Divides documents into manageable chunks using RecursiveCharacterTextSplitter
+- **Advanced Embeddings**: Utilizes IBM WatsonX's slate-125m-english-rtrvr model for text embeddings
+- **Vector Storage**: Implements Chroma vector store for efficient similarity search
+- **Large Language Model Integration**: Powered by Mixtral-8x7B Instruct v0.1 through WatsonX.ai
+- **Interactive Interface**: User-friendly Gradio web interface for document upload and querying
 
----
+## Technologies Used
 
-## Learning Objectives  
+- **IBM WatsonX.ai**: For both LLM inference and text embeddings
+  - LLM: mistralai/mixtral-8x7b-instruct-v01
+  - Embeddings: ibm/slate-125m-english-rtrvr
+- **LangChain**: For orchestrating the RAG pipeline
+- **Chroma**: Vector database for storing and retrieving embeddings
+- **Gradio**: Web interface framework
+- **PyPDF**: PDF document processing
 
-This project consolidates multiple AI components and techniques, helping you:  
+## How It Works
 
-1. Combine document loaders, text splitters, embedding models, and vector databases to construct a functional QA bot.  
-2. Use LangChain and LLMs to retrieve and answer questions from large document libraries.  
-3. Build a user-friendly interface using Gradio for real-time interaction with the bot.  
+1. **Document Upload**: Users upload PDF files through the Gradio interface
+2. **Document Processing**:
+   - The PDF is loaded using PyPDFLoader
+   - Text is split into chunks of 1000 characters with 50-character overlap
+   - Chunks are converted to embeddings using WatsonX's slate-125m model
+   - Embeddings are stored in a Chroma vector database
+3. **Query Processing**:
+   - User questions are processed by the retrieval system
+   - Relevant document chunks are retrieved from the vector store
+   - Mixtral-8x7B generates answers based on the retrieved context
 
----
+## System Architecture
 
-## Technologies Used  
+The system uses a RetrievalQA chain with the following components:
+- Document Loader: PyPDFLoader
+- Text Splitter: RecursiveCharacterTextSplitter (chunk_size=1000, overlap=50)
+- Embeddings: WatsonX Embeddings (slate-125m-english-rtrvr)
+- Vector Store: Chroma
+- LLM: WatsonX (Mixtral-8x7B Instruct)
+- Interface: Gradio web UI
 
-- **LangChain**: For handling the pipeline of operations.  
-- **Large Language Models (LLMs)**: For understanding and answering questions.  
-- **Gradio**: To create an intuitive user interface.  
-- **Python Libraries**: Including PyPDF2 (or similar) for PDF handling, FAISS for vector search, and Hugging Face transformers for embeddings.  
+## Usage
 
----
+The application runs on port 7861 and can be accessed through a web browser. Users can:
+1. Upload a PDF document using the file upload interface
+2. Enter questions about the document content
+3. Receive AI-generated answers based on the document context
 
-# How It Works
+## Technical Configuration
 
-## Load Documents
-Upload PDFs to the bot via the Gradio interface.
+- **LLM Parameters**:
+  - Max new tokens: 256
+  - Temperature: 0.5
+- **Embedding Parameters**:
+  - Truncate input tokens: 3
+  - Returns input text with embeddings
 
-## Process Text
-The documents are split into smaller sections for efficient handling.
+## Requirements
 
-## Embed Text
-Text is converted into vector embeddings for similarity search.
-
-## Store in Vector Database
-The embeddings are stored in a vector database for quick retrieval.
-
-## Query and Answer
-Enter your question, and the bot retrieves the most relevant text sections and generates an answer using an LLM.
+- IBM WatsonX.ai access
+- Python with required libraries:
+  - ibm_watsonx_ai
+  - langchain
+  - langchain_ibm
+  - gradio
+  - chromadb
